@@ -1,0 +1,202 @@
+---
+title: "Data analysis"
+author: "Albina Gibadullina"
+date: "October 11, 2020"
+output: html_document
+    toc: true
+    toc_depth: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+View available packages in CRAN: https://cran.r-project.org/web/views/
+
+Information on current R version, operating system, loaded packages
+```{r}
+sessionInfo()
+```
+
+
+Install packages for network analysis
+```{r}
+install.packages("igraph", "network", "sna")
+```
+
+
+Upload all neccessary packages
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(scales))
+suppressPackageStartupMessages(library(plotly))
+```
+
+
+Update all packages
+```{r}
+update.packages()
+```
+
+
+To unload a package
+```{r}
+# detach("package:ggplot2", unload=TRUE)
+```
+
+
+To remove a package
+```{r}
+#remove.packages("ggplot2")
+```
+
+
+Get help on a package
+```{r}
+help(package = "ggplot2")
+
+#Get additional info for packages
+browseVignettes("ggplot2")
+```
+
+
+Update R version
+```{r}
+# install.packages("installr")
+# library(installr)
+# updateR()
+```
+
+
+## R Markdown
+
+Binomial distribution
+```{r}
+#Assign values to variables
+n <- 500
+p <- 0.1
+X <- 50
+
+#computes FY(y)
+pbinom(X,n,p)
+
+#computes fY(y)
+dbinom(X,n,p) 
+```
+
+
+Normal approximation to the Binomial
+```{r}
+# generate m i.i.d. binomial random variables
+## rbinom - generation of a binomial distribution with specified paramters
+p = 0.5; n = 100; m=10000;
+yn = rbinom(m,n,p);
+
+# standardize these variables
+zn = (yn - n*p)/sqrt(p*(1-p)*n);
+
+# draw the histogram
+hist(zn,100,main=paste("Histogram of Binomial Distribution"))
+```
+
+
+Exponential distribution
+```{r}
+#Assign values to variables
+y <- 5
+lambda <- 2
+
+#computes FY(y)
+pexp(y, lambda)
+
+#computes fY(y)
+dexp(y, lambda) 
+```
+
+
+Poisson distribution
+```{r}
+#Assign values to variables
+y <- 5
+lambda <- 2
+
+#computes FY(y)
+ppois(y, lambda)
+
+#computes fY(y)
+dpois(y, lambda) 
+```
+
+
+Normal distribution
+```{r}
+#creates a vector (-3.00,-2.99,...,2.99,3.00)
+z = seq(-3,3,0.01)
+
+#computes the normal density at each point of z
+fz = dnorm(z)
+
+#plots z against fz (as a line)
+plot(z, fz, type="l")
+
+#Assign values to variables
+X <- 0.5
+Mean <- 0 
+SD <- 1
+
+#computes FY(y)
+pnorm(X, Mean, SD, lower.tail=FALSE)
+
+#computes fY(y)
+dnorm(X, Mean, SD)
+
+# set seed to reproduce the results
+set.seed(123); 
+
+# generates n=3 random deviates, normal dist, finds mean
+
+y1=rnorm(3,mean=2,sd=1); mean(y1);
+y2=rnorm(3,mean=2,sd=1); mean(y2);
+y3=rnorm(3,mean=2,sd=1); mean(y3);
+y4=rnorm(3,mean=2,sd=1); mean(y4);
+y5=rnorm(3,mean=2,sd=1); mean(y5);
+```
+
+
+Chi-square distribution
+```{r}
+
+# df is the number of degrees of freedom
+z = seq(0.1,8,0.01);
+fz1 = dchisq(z,df=1);
+fz2 = dchisq(z,df=2);
+fz3 = dchisq(z,df=3);
+
+# plot distribution functions for different df
+plot(z, fz1, type="l");
+lines(z, fz2, col="green");
+lines(z, fz3, col="red");
+
+#Assign values to variables
+CI<- 0.95
+df <- 10
+
+#computes FY(y)
+qchisq(CI, df)
+
+#computes fY(y)
+dchisq(CI,df)
+```
+
+
+T-distribution
+```{r}
+z = seq(-3,3,0.01);
+fz1 = dnorm(z);
+fz2 = dt(z,df=2);
+plot(z, fz1, type="l");
+lines(z, fz2, type="l",col="green")
+```
+
