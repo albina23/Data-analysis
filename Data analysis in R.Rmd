@@ -3,8 +3,7 @@ title: "Data analysis"
 author: "Albina Gibadullina"
 date: "October 11, 2020"
 output: html_document
-    toc: true
-    toc_depth: 4
+
 ---
 
 ```{r setup, include=FALSE}
@@ -12,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 View available packages in CRAN: https://cran.r-project.org/web/views/
+
 
 Information on current R version, operating system, loaded packages
 ```{r}
@@ -21,15 +21,13 @@ sessionInfo()
 
 Install packages for network analysis
 ```{r}
-install.packages("igraph", "network", "sna")
+#install.packages("igraph", "network", "sna", "tidyverse", "scales", "plotly")
 ```
 
 
 Upload all neccessary packages
 ```{r}
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(gapminder))
-suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(scales))
 suppressPackageStartupMessages(library(plotly))
 ```
@@ -37,13 +35,13 @@ suppressPackageStartupMessages(library(plotly))
 
 Update all packages
 ```{r}
-update.packages()
+#update.packages()
 ```
 
 
 To unload a package
 ```{r}
-# detach("package:ggplot2", unload=TRUE)
+#detach("package:ggplot2", unload=TRUE)
 ```
 
 
@@ -68,6 +66,14 @@ Update R version
 # library(installr)
 # updateR()
 ```
+
+
+Styles:
+**bold**
+*italics*
+# Header1
+## Header2
+- bullet point 1
 
 
 ## R Markdown
