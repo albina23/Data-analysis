@@ -10,12 +10,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-View available packages in CRAN: https://cran.r-project.org/web/views/
+## Set Up
+
+[View available packages in CRAN](https://cran.r-project.org/web/views/) 
 
 
 Information on current R version, operating system, loaded packages
 ```{r}
-sessionInfo()
+#sessionInfo()
 ```
 
 
@@ -53,10 +55,10 @@ To remove a package
 
 Get help on a package
 ```{r}
-help(package = "ggplot2")
+# help(package = "ggplot2")
 
 #Get additional info for packages
-browseVignettes("ggplot2")
+# browseVignettes("ggplot2")
 ```
 
 
@@ -68,15 +70,547 @@ Update R version
 ```
 
 
-Styles:
+
+## R Markdown Styles
+
 **bold**
 *italics*
+~~strikethrough~~
+
+
 # Header1
 ## Header2
-- bullet point 1
+### Header 3
 
 
-## R Markdown
+
+#### Unordered list
+
+* Item 1
+* Item 2
+    + Item 2a
+    + Item 2b
+
+#### Ordered list
+1. Item 1
+2. Item 2
+3. Item 3
+    + Item 3a
+    + Item 3b
+
+
+[linked phrase](http://example.com)
+
+Inline equation:
+$5x+2$
+
+Display equation:
+$$ 5x+2 $$
+
+## Inputting data
+
+```{r}
+x <- 1
+print(x) #explict printing
+msg <- "hello"
+msg #auto-printing
+
+#Create a sequence of values
+y <- 1:20
+```
+
+
+Creating vectors
+
+```{r}
+#Numeric data
+x <- 1 # x equals 1
+x <- 1L # specify that 1 is an integer
+
+# infinity - Inf
+1/Inf
+```
+
+
+Creating Vectors
+```{r}
+# The c() function can be used to create vectors of objects
+
+x1 <- c(0.5, 0.6) ## numeric
+x2 <- c(TRUE, FALSE) ## logical
+x3 <- c(T, F) ## logical
+x4 <- c("a", "b", "c") ## character
+x5 <- 9:29 ## integer
+x6 <- c(1+0i, 2+4i) ## complex
+
+# Using the vector() function
+x7 <- vector("numeric", length = 10)
+x1; x2; x3; x4; x5; x6; x7
+```
+
+
+Vectorized Operations
+```{r}
+#Many operations in R are vectorized making code more efficient, concise, and easier to read.
+x <- 1:4 
+y <- 6:9
+x + y
+
+#Make logical vectors
+x > 2
+x >= 2
+y == 8
+
+x*y
+x/y
+
+#Vectorized Matrix Operations
+x <- matrix(1:4, 2, 2)
+y <- matrix(rep(10, 4), 2, 2)
+
+x*y ## element-wise multiplication
+x/y  ## element-wise division
+x %*% y ## true matrix multiplication
+```
+
+
+Mixing Objects
+```{r}
+#When different objects are mixed in a vector, coercion occurs so that every element in the vector is of the same class.
+
+y <- c(1.7, "a") ## convert 1.7 to character
+y <- c(TRUE, 2) ## convert TRUE to numeric = 1
+y <- c("a", TRUE) ## convert TRUE to character
+```
+
+
+Explicit Coercion
+```{r}
+#Objects can be explicitly coerced from one class to another using the as.* functions, if available.
+
+x <- 0:6
+class(x)
+as.numeric(x)
+as.logical(x)
+as.character(x)
+
+#Nonsensical coercion results in NAs:
+
+x <- c("a", "b", "c")
+as.numeric(x)
+as.logical(x)
+as.complex(x)
+```
+
+
+Matrices
+```{r}
+#Matrices are vectors with a dimension attribute. The dimension attribute is itself an integer vector of length 2 (nrow, ncol)
+
+m <- matrix(nrow = 2, ncol = 3)
+m
+dim(m)
+attributes(m)
+
+#Matrices are constructed column-wise, so entries can be thought of starting in the “upper left” corner and running down the columns.
+m <- matrix(1:6, nrow = 2, ncol = 3)
+m
+
+#Matrices can also be created directly from vectors by adding a dimension attribute.
+m <- 1:10
+m
+
+dim(m) <- c(2, 5)
+m
+
+# cbind-ing and rbind-ing
+## Matrices can be created by column-binding or row-binding with cbind() and rbind()
+
+x <- 1:3
+y <- 10:12
+cbind(x, y)
+
+rbind(x, y)
+```
+
+
+Lists
+```{r}
+#Lists are a special type of vector that can contain elements of different classes
+
+x <- list(1, "a", TRUE, 1 + 4i)
+x
+```
+
+
+Factors
+```{r}
+#Factors are used to represent categorical data. Factors can be unordered or ordered
+
+x <- factor(c("yes", "yes", "no", "yes", "no"))
+x
+
+# frequency count summary
+table(x)
+
+# turn categorical data into integer data (how R sees categorical data)
+unclass(x)
+
+#The order of the levels can be set using the levels argument to factor(). R lists levels alphabetically unless specified
+
+x <- factor(c("yes", "yes", "no", "yes", "no"),
+ levels = c("yes", "no"))
+x
+```
+
+
+Missing values
+```{r}
+# NA denotes missing values
+# is.na() is used to test objects if they are NA
+
+# NaN devotes undefined mathematical operations
+# is.nan() is used to test for NaN
+
+x <- c(1, 2, NA, 10, 3)
+is.na(x)
+is.nan(x)
+
+# A NaN value is also NA but the converse is not true
+
+x <- c(1, 2, NaN, NA, 4)
+is.na(x)
+is.nan(x)
+```
+
+
+Removing NA Values
+```{r}
+#A common task is to remove missing values (NAs).
+x <- c(1, 2, NA, 4, NA, 5)
+
+#extract vector with missing values
+bad <- is.na(x)
+
+#exclude vector with all the missing values
+x[!bad]
+
+
+#What if there are multiple things and you want to take the subset with no missing values?
+x <- c(1, 2, NA, 4, NA, 5)
+y <- c("a", NA, "b", "d", NA, "f")
+
+#Leave values that are not missing for both x and y
+good <- complete.cases(x, y)
+good
+x[good]
+y[good]
+```
+
+
+
+Data Frames
+```{r}
+# Data frames are used to store tabular data. Unlike matrices, data frames can store different classes of objects in each column (just like lists). 
+
+x <- data.frame(id = c("A", "B", "C", "D"), foo = 1:4, bar = c(T, T, F, F))
+
+# row.names lists all the rows
+row.names(x)
+
+# measure number of rows
+nrow(x)
+
+# measure number of columns
+ncol(x)
+
+# read.table() or read.csv() to create a data frame
+
+# data.matrix() to converte data frame to a matrix, coerces objects so that they are all the same!
+```
+
+
+Names
+```{r}
+#R objects can also have names, which is very useful for writing readable code and self-describing objects.
+
+x <- 1:3
+names(x) <- c("foo", "bar", "norf")
+
+x
+names(x)
+
+#Lists can also have names.
+x <- list(a = 1, b = 2, c = 3)
+x
+names(x)
+
+#Matrics can also have names.
+m <- matrix(1:4, nrow = 2, ncol = 2)
+dimnames(m) <- list(c("a", "b"), c("c", "d"))
+m
+```
+
+
+## Reading data
+
+There are a few principal functions reading data into R
+
+* read.table, read.csv
+    + for reading tabular data, read.csv is identical to read.table except that the default separator is a comma.
+* readLines
+    + for reading lines of a text file
+* source
+    + for reading in R code files (inverse of dump)
+* dget
+    + for reading in R code files (inverse of dput)
+* load
+    + for reading in saved workspaces
+* unserialize
+    + for reading single R objects in binary form
+
+
+## Writing Data
+
+There are analogous functions for writing data to files
+
+* write.table
+    + for writing tabular data
+* writeLines
+    + for writing lines of a text file
+* dump
+    + for writing in R code files
+* dput
+    + for writing in R code files (inverse of dput)
+* save
+    + for saving in workspaces
+* serialize
+    + for writing single R objects in binary form
+
+
+### read.table arguments:
+* file, the name of a file, or a connection
+* header, logical indicating if the file has a header line
+* sep, a string indicating how the columns are separated
+* colClasses, a character vector indicating the class of each column in the dataset
+* nrows, the number of rows in the dataset
+* comment.char, a character string indicating the comment character
+* skip, the number of lines to skip from the beginning
+stringsAsFactors, should character variables be coded as factors?
+
+
+#### Reading in Large Datasets with read.table
+
+Use the colClasses argument - specifying this option instead of using the default can make ’read.table’ run MUCH faster, often twice as fast.
+
+If all of the columns are “numeric”:
+```{r}
+initial <- read.table("datatable.txt", 
+                      colClasses = "numeric")
+```
+
+
+If you don't know the classes of each column:
+```{r}
+# Read the first nrows and identify the class of data for each column
+initial <- read.table("datatable.txt", 
+                      nrows = 100)
+classes <- sapply(initial, class)
+
+# Read the dataset telling R the data class for each column
+tabAll <- read.table("datatable.txt",
+                     colClasses = classes)
+```
+
+
+
+Extracting data from a dataframe
+```{r}
+# Create a dataset
+dataset1 <- data.frame(c(20,40,60),c(10,5,7),c(1,2,3))
+names(dataset1) <- c("Height", "Weight", "Age")
+
+# Extract all rows, all colums
+dataset1[,]
+
+# Extract first row and all columns
+dataset1[1,]
+
+# Extract first two rows and all columns
+dataset1[1:2,]
+
+# Extract first and third row and all columns
+dataset1[c(1,3),]
+
+# Extract first row and second and third column
+dataset1[1,2:3]
+
+# Extract third column with all rows
+dataset1[,3]
+
+# Extract first and third column with all rows
+dataset1[,c(1,3)]
+
+# Extract element at 2nd row, 3rd column
+dataset1[2,3]
+```
+
+
+
+Subsetting Lists
+```{r}
+#Create a list
+x <- list(foo = 1:4, bar = 0.6)
+
+# Extract 1st element sane class as the original - list
+x[1]
+
+# Extract the value of the 1st element
+x[[1]]
+
+# Extract the value of the the element "bar"
+x$bar
+
+# Same as before
+x[["bar"]]
+
+# Extract 2nd element "bar"
+x["bar"]
+
+
+# Extract more than one element
+x <- list(foo = 1:4, bar = 0.6, baz = "hello")
+x[c(1, 3)]
+
+
+#Subsetting Nested Elements of a List
+x <- list(a = list(10, 12, 14), b = c(3.14, 2.81))
+x[[c(1, 3)]]
+x[[c(2, 1)]]
+
+```
+
+
+Subsetting a Matrix
+```{r}
+x <- matrix(1:6, 2, 3)
+x[1, 2]
+x[2, 1]
+x[1, ]
+x[, 2]
+
+#By default, when a single element of a matrix is retrieved, it is returned as a vector of length 1 rather than a 1 × 1 matrix. This behavior can be turned off by setting drop = FALSE.
+x <- matrix(1:6, 2, 3)
+x[1, 2]
+x[1, 2, drop = FALSE]
+
+# Similarly, subsetting a single column or a single row will give you a vector, not a matrix (by default).
+x <- matrix(1:6, 2, 3)
+x[1, ]
+x[1, , drop = FALSE]
+```
+
+
+HW1, Week1
+```{r}
+library(readr)
+
+# Read the csv file
+hw1_data <- read.csv("hw1_data.csv")
+
+# List the column names
+colnames(hw1_data)
+
+# Extract 2 top rows
+hw1_data_2toprows <- head(hw1_data, 2)
+print(hw1_data_2toprows)
+
+# Count the number of rows
+nrow(hw1_data)
+
+# Extract 2 bottom rows
+hw1_data_2bottomrows <- tail(hw1_data, 2)
+print(hw1_data_2bottomrows)
+
+# Extract row#47, column#1
+hw1_data[47,1]
+
+# Count missing values in column 1
+table(is.na(hw1_data[,1])) 
+
+#create a subset of data feauturing column 1 excluding all missing values
+sub <- subset(hw1_data, !is.na(hw1_data[,1]), select =Ozone) 
+
+# Find average of column 1 excluding missing values
+apply(sub,2,mean)
+
+
+# Turn the data file into df
+hw1_data_df <- data.frame(hw1_data)
+
+# Extract the subset of rows of the data frame where Ozone values are above 31 and Temp values are above 90. What is the mean of Solar.R in this subset?
+
+sub1 = subset(hw1_data, Ozone > 31 & Temp > 90, select = Solar.R)
+apply(sub1, 2, mean)
+
+
+# What is the mean of "Temp" when "Month" is equal to 6?
+sub2 = subset(hw1_data, Month==6, select = Temp)
+apply(sub2, 2, mean)
+
+# What was the maximum ozone value in the month of May (i.e. Month is equal to 5)?
+
+sub3 = subset(hw1_data, Month==5 & !is.na(Ozone), select = Ozone)
+apply(sub3, 2, max)
+  
+```
+
+
+### Textual formats
+dumping and dputing are useful because the resulting textual format is edit-able, and in the case of corruption, potentially recoverable.
+
+dput-ting R Objects
+```{r}
+#Another way to pass data around is by deparsing the R object with dput and reading it back in using dget.
+y <- data.frame(a = 1, b = "a")
+dput(y)
+
+#Create a new file with this information
+dput(y, file = "y.R")
+
+# Read it into R
+new.y <- dget("y.R")
+
+# Create an output that is readable
+new.y
+```
+
+
+Dumping R Objects
+```{r}
+#Multiple objects can be deparsed using the dump function and read back in using source.
+x <- "foo"
+y <- data.frame(a = 1, b = "a")
+dump(c("x", "y"), file = "data.R")
+rm(x, y)
+source("data.R")
+x
+y
+```
+
+
+Reading Lines of a Text File
+```{r}
+con <- url("http://www.jhsph.edu", "r")
+x <- readLines(con)
+head(x)
+```
+
+
+
+
+## Distributions
+
 
 Binomial distribution
 ```{r}
